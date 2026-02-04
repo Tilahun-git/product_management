@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import toast, { Toaster } from 'react-hot-toast'
-import { UploadCloud, X } from 'lucide-react'
+import { UploadCloud, X, Trash2 } from 'lucide-react'
 
 type ProductForm = {
   name: string
@@ -27,12 +27,8 @@ export default function AddProductPage() {
     price: '',
     stock: '',
   })
-
   const [error, setError] = useState<string | null>(null)
 
-  // ===============================
-  // Prefill form if editing
-  // ===============================
   useEffect(() => {
     if (!editingId) return
 
@@ -99,7 +95,7 @@ export default function AddProductPage() {
         toast.success(data.message)
 
         if (editingId) {
-          router.push('/products')
+          router.push('/')
         } else {
           setForm({
             name: '',
@@ -148,6 +144,9 @@ export default function AddProductPage() {
       toast.error('Upload failed', { id: 'upload' })
     }
   }
+  function handleCancel() {
+     router.push('/') 
+  }
 
   return (
     <main className="max-w-xl mx-auto p-8 bg-white rounded-xl shadow mt-8">
@@ -158,9 +157,7 @@ export default function AddProductPage() {
       </h2>
 
       {error && (
-        <p className="mb-3 text-sm text-red-600 bg-red-50 p-2 rounded">
-          {error}
-        </p>
+        <p className="mb-3 text-sm text-red-600 bg-red-50 p-2 rounded">{error}</p>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -180,11 +177,6 @@ export default function AddProductPage() {
           onChange={handleChange}
           className="w-full border rounded px-3 py-2"
         />
-
-        {/* ===============================
-           PROFESSIONAL IMAGE UPLOAD BOX
-        =============================== */}
-
         <input
           ref={fileInputRef}
           type="file"
@@ -209,7 +201,6 @@ export default function AddProductPage() {
               alt="preview"
               className="w-full h-48 object-cover rounded-lg"
             />
-
             <button
               type="button"
               onClick={() => setForm(prev => ({ ...prev, image: '' }))}
@@ -239,12 +230,21 @@ export default function AddProductPage() {
           className="w-full border rounded px-3 py-2"
         />
 
-        <button
-          type="submit"
-          className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition"
-        >
-          {editingId ? 'Update Product' : 'Add Product'}
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="submit"
+            className="flex-1 bg-blue-400 text-white py-2 rounded hover:bg-blue-800 transition"
+          >
+            {editingId ? 'Update Product' : 'Add Product'}
+          </button>
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="flex-1 border border-gray-200 text-gray-700 py-2 rounded hover:bg-gray-800 hover:text-white transition flex items-center justify-center gap-2"
+          >
+            <X size={16} /> Cancel
+          </button>
+        </div>
       </form>
     </main>
   )

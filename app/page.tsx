@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import toast, { Toaster } from "react-hot-toast"
+import { Edit2, Trash2 } from 'lucide-react'
+
 
 type Product = {
   id: string      // frontend string id
@@ -87,20 +89,22 @@ export default function HomePage() {
                 <p>📦 Stock: {product.stock}</p>
               </div>
 
-              <div className="mt-4 flex gap-2">
-                <button
-                  onClick={() => router.push(`/products/addProduct?id=${product.id}`)}
-                  className="flex-1 border py-1 rounded hover:bg-gray-100"
-                >
-                  Edit
-                </button>
+              <div className="mt-4 flex gap-2 justify-between">
+                            <button
+                onClick={() => router.push(`products/addProduct?id=${product.id}`)}
+                className="p-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center justify-center"
+                title="Edit Product"
+              >
+                <Edit2 size={18} />
+              </button>
 
-                <button
-                  onClick={() => handleDelete(product.id)}
-                  className="flex-1 bg-red-500 text-white py-1 rounded hover:bg-red-600"
-                >
-                  Delete
-                </button>
+                            <button
+                onClick={() => handleDelete(product.id)}
+                className="p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition flex items-center justify-center"
+                title="Delete Product"
+              >
+                <Trash2 size={18} />
+              </button>
               </div>
             </div>
           ))}
