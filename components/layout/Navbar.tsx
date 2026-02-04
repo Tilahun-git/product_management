@@ -5,7 +5,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { MdClose } from "react-icons/md";
 import { MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { ModeToggle } from "./ModeToggle";
-import { Button } from "../ui/button";
+import SearchComp from '@/components/layout/SearchComp'
 
 
 
@@ -33,6 +33,7 @@ function Navbar() {
           <Link href="/products" className="text-blue-700 hover:text-indigo-600 font-medium transition-colors duration-200">Products</Link>
           <Link href="/contact" className="text-blue-700 hover:text-indigo-600 font-medium transition-colors duration-200">Contact</Link>
         
+        <SearchComp/>
         </div>
         
             <ModeToggle/>

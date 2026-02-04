@@ -8,28 +8,34 @@ import {
 } from '@/lib/products'
 
 
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const id = searchParams.get('id')
+export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url)
+    const id = searchParams.get('id')
 
-  if (id) {
-    const product = await getProductById(id)
+    if (id) {
+      const numericId = Number(id)
 
-    if (!product) {
-      return NextResponse.json(
-        { success: false, message: 'Product not found' },
-        { status: 404 }
-      )
+      if (isNaN(numericId)) {
+        return NextResponse.json({ success: false, products: [] }, { status: 400 })
+      }
+
+      const product = await getProductById(numericId)
+
+      if (!product) {
+        return NextResponse.json({ success: false, products: [] }, { status: 404 })
+      }
+
+      return NextResponse.json({ success: true, products: [product] })
     }
 
-    return NextResponse.json({
-      success: true,
-      product,
-    })
+    // return all products
+    const products = await getAllProducts()
+    return NextResponse.json({ success: true, products })
+  } catch (error: any) {
+    console.error(error)
+    return NextResponse.json({ success: false, products: [] }, { status: 500 })
   }
-
-  const products = await getAllProducts()
-  return NextResponse.json(products)
 }
 
 export async function POST(req: Request) {
@@ -78,7 +84,7 @@ export async function PUT(req: Request) {
 
   try{
       const response = await req.json()
-      const updatedProduct = await updateProduct(Number(response.ID), response)
+      const updatedProduct = await updateProduct(response.ID, response)
 
 
       if(updatedProduct){
@@ -110,7 +116,7 @@ export async function DELETE(req: NextRequest) {
     const id = searchParams.get("id");
     if (!id) return NextResponse.json({ success: false, message: "ID must be available please" }, { status: 400 });
 
-    const deleted = await deleteProduct(parseInt(id, 10));
+    const deleted = await deleteProduct(id);
 
     return NextResponse.json({
       success: true,

@@ -15,9 +15,9 @@ export type UpdateProductInput = Partial<CreateProductInput>
 
 // Get all products (maps backend ID → frontend id string)
 export async function getAllProducts() {
-  const products = await prisma.product.findMany()
-  return products.map((p:Product) => ({
-    id: p.id.toString(), // map to string for frontend
+  const products = await prisma.product.findMany();
+  return products.map((p) => ({
+    id: p.ID.toString(), // map to string for frontend
     name: p.name,
     price: p.price,
     description: p.description,
@@ -27,9 +27,12 @@ export async function getAllProducts() {
 }
 
 // Get single product by id (frontend string id → backend number ID)
-export async function getProductById(id: string) {
+export async function getProductById(id: number) {
+
+    if (!id || isNaN(id)) return null
+
   const product = await prisma.product.findUnique({
-    where: { ID: Number(id) },
+    where: { ID: id },
   })
   if (!product) return null
 
@@ -42,6 +45,9 @@ export async function getProductById(id: string) {
     stock: product.stock,
   }
 }
+
+
+
 
 // Create a new product
 export async function addProduct(data: CreateProductInput) {

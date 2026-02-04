@@ -1,38 +1,35 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import toast, { Toaster } from 'react-hot-toast'
+import { useEffect, useState } from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import toast, { Toaster } from "react-hot-toast"
 
 type Product = {
-  ID: number
+  id: string      // frontend string id
   name: string
-  description?: string | null
-  image?: string | null
+  description?: string
+  image?: string
   price: number
   stock: number
-  createdAt: string
 }
 
 export default function HomePage() {
   const router = useRouter()
-
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
 
-  // =========================
-  // Fetch Products
-  // =========================
   async function fetchProducts() {
     try {
       setLoading(true)
-      const res = await fetch('/api/products')
+      const res = await fetch("/api/products")
       const data = await res.json()
-      setProducts(data)
+      const productsArray = Array.isArray(data.products) ? data.products : []
+      setProducts(productsArray)
     } catch (err) {
       console.error(err)
-      toast.error('Failed to load products')
+      toast.error("Failed to load products")
+      setProducts([])
     } finally {
       setLoading(false)
     }
@@ -42,28 +39,22 @@ export default function HomePage() {
     fetchProducts()
   }, [])
 
-  // =========================
-  // Delete Product
-  // =========================
-  const handleDelete = async (id: number) => {
-    if (!confirm('Delete this product?')) return
+  const handleDelete = async (id: string) => {
+    if (!confirm("Delete this product?")) return
 
     try {
-      const res = await fetch(`/api/products?id=${id}`, {
-        method: 'DELETE',
-      })
-
+      const res = await fetch(`/api/products?id=${id}`, { method: "DELETE" })
       const data = await res.json()
 
       if (data.success) {
         toast.success(data.message)
-        setProducts(products.filter((p) => p.ID !== id))
+        setProducts(products.filter((p) => p.id !== id))
       } else {
         toast.error(data.message)
       }
     } catch (err) {
       console.error(err)
-      toast.error('Something went wrong while deleting')
+      toast.error("Something went wrong while deleting")
     }
   }
 
@@ -71,20 +62,13 @@ export default function HomePage() {
     <main className="max-w-6xl mx-auto p-8">
       <Toaster position="top-right" />
 
-      {/* =======================
-          HEADER
-      ======================= */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Products</h1>
-
-        <Link href={'products/addProduct'} className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">
-         ➕ Add New Product
+        <Link href="/products/addProduct" className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition">
+          ➕ Add New Product
         </Link>
       </div>
 
-      {/* =======================
-          PRODUCT LIST
-      ======================= */}
       {loading ? (
         <p>Loading...</p>
       ) : products.length === 0 ? (
@@ -92,26 +76,12 @@ export default function HomePage() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {products.map((product) => (
-            <div
-              key={product.ID}
-              className="border rounded-xl p-4 bg-white shadow-sm"
-            >
+            <div key={product.id} className="border rounded-xl p-4 bg-white shadow-sm">
               {product.image && (
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="h-40 w-full object-cover rounded mb-3"
-                />
+                <img src={product.image} alt={product.name} className="h-40 w-full object-cover rounded mb-3" />
               )}
-
               <h3 className="font-semibold text-lg">{product.name}</h3>
-
-              {product.description && (
-                <p className="text-sm text-gray-600 mt-1">
-                  {product.description}
-                </p>
-              )}
-
+              {product.description && <p className="text-sm text-gray-600 mt-1">{product.description}</p>}
               <div className="mt-2 text-sm">
                 <p>💲 {product.price}</p>
                 <p>📦 Stock: {product.stock}</p>
@@ -119,16 +89,14 @@ export default function HomePage() {
 
               <div className="mt-4 flex gap-2">
                 <button
-                  onClick={() =>
-                    router.push(`products/addProduct?id=${product.ID}`)
-                  }
+                  onClick={() => router.push(`/products/addProduct?id=${product.id}`)}
                   className="flex-1 border py-1 rounded hover:bg-gray-100"
                 >
                   Edit
                 </button>
 
                 <button
-                  onClick={() => handleDelete(product.ID)}
+                  onClick={() => handleDelete(product.id)}
                   className="flex-1 bg-red-500 text-white py-1 rounded hover:bg-red-600"
                 >
                   Delete
