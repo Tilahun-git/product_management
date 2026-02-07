@@ -1,76 +1,92 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import ProductCard from '@/components/layout/ProductCard'
-import toast, { Toaster } from 'react-hot-toast'
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import ProductCard from "@/components/layout/ProductCard";
+import toast, { Toaster } from "react-hot-toast";
 
 type Product = {
-  ID: number
-  name: string
-  price: number
-  description?: string
-  image?: string
-}
+  ID: number;
+  name: string;
+  price: number;
+  description?: string;
+  image?: string;
+};
 
 type FrontendProduct = {
-  id: string
-  name: string
-  price: number
-  description?: string
-  image?: string
-}
+  id: string;
+  name: string;
+  price: number;
+  description?: string;
+  image?: string;
+};
 
 export default function HomePage() {
-  const [products, setProducts] = useState<FrontendProduct[]>([])
-  const [loading, setLoading] = useState(false)
+  const [products, setProducts] = useState<FrontendProduct[]>([]);
+  const [loading, setLoading] = useState(false);
 
   async function fetchProducts() {
     try {
-      setLoading(true)
-      const res = await fetch('/api/products')
-      const data = await res.json()
+      setLoading(true);
+      const res = await fetch("/api/products");
+      const data = await res.json();
 
-  const productsArray = Array.isArray(data.products)
-      ? data.products
-      : []
+      const productsArray = Array.isArray(data.products)
+        ? data.products
+        : [];
+
       setProducts(
-        productsArray.map((p:FrontendProduct) => ({
+        productsArray.map((p: FrontendProduct) => ({
           id: p.id,
           name: p.name,
           price: p.price,
           description: p.description,
           image: p.image,
         }))
-      )
+      );
     } catch (err) {
-      console.error(err)
-      toast.error('Failed to load products')
-      setProducts([])
+      console.error(err);
+      toast.error("Failed to load products");
+      setProducts([]);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
   useEffect(() => {
-    fetchProducts()
-  }, [])
+    fetchProducts();
+  }, []);
 
   return (
-    <main className="min-h-screen bg-gray-50 p-8">
+    <main
+      className="
+        min-h-screen
+        p-8
+        bg-gray-50 dark:bg-slate-900   /* ✅ FIX 1 */
+        text-slate-800 dark:text-slate-200   /* ✅ FIX 2 */
+      "
+    >
       <Toaster position="top-right" />
 
       <div className="mx-auto max-w-6xl">
         <div className="flex justify-between mb-8">
           <h1 className="text-3xl font-bold">Products</h1>
 
-          <Link href="/products/addProduct" className="bg-blue-600 text-white px-6 py-3 rounded">
+          <Link
+            href="/products/addProduct"
+            className="
+              bg-blue-600 text-white
+              px-6 py-3 rounded
+              hover:bg-blue-700
+              dark:hover:bg-blue-500   /* ✅ FIX 3 */
+            "
+          >
             ➕ Add Product
           </Link>
         </div>
 
         {loading ? (
-          <p>Loading...</p>
+          <p className="text-gray-500 dark:text-gray-400">Loading...</p> /* ✅ FIX 4 */
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {products.map((product) => (
@@ -80,5 +96,5 @@ export default function HomePage() {
         )}
       </div>
     </main>
-  )
+  );
 }

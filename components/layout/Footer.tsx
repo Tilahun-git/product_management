@@ -1,15 +1,13 @@
-import React from 'react'
+import FooterMd from "./FooterMd";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-100 text-2xl text-white dark:bg-neutral-900 dark:text-white py-8 sticky bottom-0">        
-
-        {/* Bottom copyright */}
-        <div className="text-center text-sm text-gray-500 ">
-          © {new Date().getFullYear()} MyBrand. All rights reserved.
-        </div>
+    <footer
+      className="bg-gray-100 dark:bg-neutral-900 text-slate-800 dark:text-slate-200 py-4">
+      <FooterMd />
+      <div className="text-center text-sm text-gray-500 dark:text-gray-400 py-3">
+        © {new Date().getFullYear()} MyBrand. All rights reserved.
+      </div>
     </footer>
   );
 }
-
-  

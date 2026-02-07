@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import toast, { Toaster } from 'react-hot-toast'
-import { UploadCloud, X, Trash2 } from 'lucide-react'
+import { UploadCloud, X } from 'lucide-react'
 
 type ProductForm = {
   name: string
@@ -29,6 +29,7 @@ export default function AddProductPage() {
   })
   const [error, setError] = useState<string | null>(null)
 
+  // Fetch product for editing
   useEffect(() => {
     if (!editingId) return
 
@@ -144,39 +145,45 @@ export default function AddProductPage() {
       toast.error('Upload failed', { id: 'upload' })
     }
   }
+
   function handleCancel() {
-     router.push('/') 
+    router.push('/')
   }
 
   return (
-    <main className="max-w-xl mx-auto p-8 bg-white rounded-xl shadow mt-8">
+    <main className="max-w-xl mx-auto p-8 mt-8 mb-4 rounded-xl shadow bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200">
       <Toaster position="top-right" />
 
-      <h2 className="text-xl font-semibold mb-4">
+      <h2 className="text-xl font-semibold mb-4 text-center">
         {editingId ? 'Update Product' : 'Add New Product'}
       </h2>
 
       {error && (
-        <p className="mb-3 text-sm text-red-600 bg-red-50 p-2 rounded">{error}</p>
+        <p className="mb-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900 p-2 rounded">
+          {error}
+        </p>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
-
+        {/* Product Name */}
         <input
           name="name"
           placeholder="Product name"
           value={form.name}
           onChange={handleChange}
-          className="w-full border rounded px-3 py-2"
+          className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-gray-50 dark:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 hover:bg-gray-100 dark:hover:bg-slate-600 transition"
         />
 
+        {/* Description */}
         <textarea
           name="description"
           placeholder="Description"
           value={form.description}
           onChange={handleChange}
-          className="w-full border rounded px-3 py-2"
+          className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-gray-50 dark:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 hover:bg-gray-100 dark:hover:bg-slate-600 transition"
         />
+
+        {/* Image Upload */}
         <input
           ref={fileInputRef}
           type="file"
@@ -188,11 +195,11 @@ export default function AddProductPage() {
         {!form.image ? (
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center cursor-pointer hover:border-black hover:bg-gray-50 transition"
+            className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-xl p-6 text-center cursor-pointer hover:border-black dark:hover:border-white hover:bg-gray-50 dark:hover:bg-slate-600 transition"
           >
-            <UploadCloud className="mx-auto w-8 h-8 text-gray-500 mb-2" />
+            <UploadCloud className="mx-auto w-8 h-8 text-gray-500 dark:text-gray-300 mb-2" />
             <p className="text-sm font-medium">Click to upload image</p>
-            <p className="text-xs text-gray-400">PNG, JPG, WEBP supported</p>
+            <p className="text-xs text-gray-400 dark:text-gray-400">PNG, JPG, WEBP supported</p>
           </div>
         ) : (
           <div className="relative">
@@ -204,13 +211,14 @@ export default function AddProductPage() {
             <button
               type="button"
               onClick={() => setForm(prev => ({ ...prev, image: '' }))}
-              className="absolute top-2 right-2 bg-black text-white p-1 rounded-full"
+              className="absolute top-2 right-2 bg-black dark:bg-white text-white dark:text-black p-1 rounded-full"
             >
               <X size={16} />
             </button>
           </div>
         )}
 
+        {/* Price */}
         <input
           name="price"
           type="number"
@@ -218,29 +226,31 @@ export default function AddProductPage() {
           placeholder="Price"
           value={form.price}
           onChange={handleChange}
-          className="w-full border rounded px-3 py-2"
+          className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-gray-50 dark:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 hover:bg-gray-100 dark:hover:bg-slate-600 transition"
         />
 
+        {/* Stock */}
         <input
           name="stock"
           type="number"
           placeholder="Stock"
           value={form.stock}
           onChange={handleChange}
-          className="w-full border rounded px-3 py-2"
+          className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-gray-50 dark:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 hover:bg-gray-100 dark:hover:bg-slate-600 transition"
         />
 
+        {/* Buttons */}
         <div className="flex gap-2">
           <button
             type="submit"
-            className="flex-1 bg-blue-400 text-white py-2 rounded hover:bg-blue-800 transition"
+            className="flex-1 bg-cyan-800 dark:bg-gray-300 text-white dark:text-slate-900 py-2 rounded-lg hover:opacity-90 transition"
           >
             {editingId ? 'Update Product' : 'Add Product'}
           </button>
           <button
             type="button"
             onClick={handleCancel}
-            className="flex-1 border border-gray-200 text-gray-700 py-2 rounded hover:bg-gray-800 hover:text-white transition flex items-center justify-center gap-2"
+            className="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-200 py-2 rounded-lg hover:bg-gray-800 dark:hover:bg-slate-700 hover:text-white transition flex items-center justify-center gap-2"
           >
             <X size={16} /> Cancel
           </button>
