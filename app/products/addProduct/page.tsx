@@ -89,9 +89,7 @@ export default function AddProductPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(editingId ? { ID: Number(editingId), ...payload } : payload),
       })
-
       const data = await res.json()
-
       if (data.success) {
         toast.success(data.message)
 
@@ -157,13 +155,11 @@ export default function AddProductPage() {
       <h2 className="text-xl font-semibold mb-4 text-center">
         {editingId ? 'Update Product' : 'Add New Product'}
       </h2>
-
       {error && (
         <p className="mb-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900 p-2 rounded">
           {error}
         </p>
       )}
-
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Product Name */}
         <input
@@ -173,8 +169,6 @@ export default function AddProductPage() {
           onChange={handleChange}
           className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-gray-50 dark:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 hover:bg-gray-100 dark:hover:bg-slate-600 transition"
         />
-
-        {/* Description */}
         <textarea
           name="description"
           placeholder="Description"
@@ -182,8 +176,6 @@ export default function AddProductPage() {
           onChange={handleChange}
           className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-gray-50 dark:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 hover:bg-gray-100 dark:hover:bg-slate-600 transition"
         />
-
-        {/* Image Upload */}
         <input
           ref={fileInputRef}
           type="file"
@@ -217,8 +209,6 @@ export default function AddProductPage() {
             </button>
           </div>
         )}
-
-        {/* Price */}
         <input
           name="price"
           type="number"
@@ -228,8 +218,6 @@ export default function AddProductPage() {
           onChange={handleChange}
           className="w-full border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-gray-50 dark:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 hover:bg-gray-100 dark:hover:bg-slate-600 transition"
         />
-
-        {/* Stock */}
         <input
           name="stock"
           type="number"

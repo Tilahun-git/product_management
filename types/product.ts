@@ -1,9 +1,7 @@
-export type Product = {
-  id: number
+export type CreateProductInput = {
   name: string
-  price: number
-  category: string
   description?: string
-  image: string
-  stock:number
+  image?: string
+  price: number
+  stock?: number
 }

@@ -28,8 +28,8 @@ export default function ProductCard({
         hover:shadow-md
         transition
         
-        bg-white                /* light mode */
-        dark:bg-slate-800       /* ✅ FIX 1: dark background */
+        bg-white               
+        dark:bg-slate-800       
       "
     >
       {image ? (
@@ -49,11 +49,11 @@ export default function ProductCard({
             rounded
             mb-4
 
-            bg-gray-100           /* light */
-            dark:bg-slate-700     /* ✅ FIX 2: dark placeholder */
+            bg-gray-100         
+            dark:bg-slate-700     
 
             text-gray-400
-            dark:text-gray-300    /* ✅ FIX 3: dark text */
+            dark:text-gray-300    
           "
         >
           No Image
@@ -66,7 +66,7 @@ export default function ProductCard({
           font-semibold
 
           text-gray-900
-          dark:text-white         /* ✅ FIX 4: title text */
+          dark:text-white        
         "
       >
         {name}
@@ -78,7 +78,7 @@ export default function ProductCard({
           text-sm
           font-medium
           text-blue-600
-          dark:text-blue-400     /* ✅ FIX 5: price color */
+          dark:text-blue-400     
         "
       >
         ${price}
@@ -90,7 +90,7 @@ export default function ProductCard({
             mt-2
             text-sm
             text-gray-600
-            dark:text-gray-300   /* ✅ FIX 6: description */
+            dark:text-gray-300   
           "
         >
           {description}

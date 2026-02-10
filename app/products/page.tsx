@@ -4,14 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import ProductCard from "@/components/layout/ProductCard";
 import toast, { Toaster } from "react-hot-toast";
-
-type Product = {
-  ID: number;
-  name: string;
-  price: number;
-  description?: string;
-  image?: string;
-};
+import SearchComp from "@/components/layout/SearchComp";
 
 type FrontendProduct = {
   id: string;
@@ -52,7 +45,6 @@ export default function HomePage() {
       setLoading(false);
     }
   }
-
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -62,31 +54,25 @@ export default function HomePage() {
       className="
         min-h-screen
         p-8
-        bg-gray-50 dark:bg-slate-900   /* ✅ FIX 1 */
-        text-slate-800 dark:text-slate-200   /* ✅ FIX 2 */
-      "
-    >
+        bg-gray-50 dark:bg-slate-900   
+        text-slate-800 dark:text-slate-200">
       <Toaster position="top-right" />
-
       <div className="mx-auto max-w-6xl">
         <div className="flex justify-between mb-8">
           <h1 className="text-3xl font-bold">Products</h1>
-
+          <SearchComp/>
           <Link
             href="/products/addProduct"
             className="
               bg-blue-600 text-white
               px-6 py-3 rounded
               hover:bg-blue-700
-              dark:hover:bg-blue-500   /* ✅ FIX 3 */
-            "
-          >
+              dark:hover:bg-blue-500">
             ➕ Add Product
           </Link>
         </div>
-
         {loading ? (
-          <p className="text-gray-500 dark:text-gray-400">Loading...</p> /* ✅ FIX 4 */
+          <p className="text-gray-500 dark:text-gray-400">Loading...</p> 
         ) : (
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {products.map((product) => (

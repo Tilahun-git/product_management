@@ -1,15 +1,6 @@
 // lib/api.ts
-import { Product } from '@/types/product'
+import { CreateProductInput } from '@/types/product'
 import { prisma } from './prisma'
-
-// Input types for creating/updating products
-export type CreateProductInput = {
-  name: string
-  description?: string
-  image?: string
-  price: number
-  stock?: number
-}
 
 export type UpdateProductInput = Partial<CreateProductInput>
 
@@ -100,3 +91,36 @@ export async function deleteProduct(id: string) {
     stock: product.stock,
   }
 }
+
+// Search products
+export async function searchProducts(query: string) {
+  const products = await prisma.product.findMany({
+    where: {
+      OR: [
+        {
+          name: {
+            contains: query,
+            mode: 'insensitive',
+          },
+        },
+        {
+          description: {
+            contains: query,
+            mode: 'insensitive',
+          },
+        },
+      ],
+    },
+   orderBy: { name: "asc" },
+  })
+
+  return products.map((p) => ({
+    id: p.ID.toString(),
+    name: p.name,
+    price: p.price,
+    description: p.description,
+    image: p.image,
+    stock: p.stock,
+  }))
+}
+

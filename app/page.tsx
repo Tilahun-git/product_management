@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { Edit2, Trash2 } from "lucide-react";
+import SearchComp from "@/components/layout/SearchComp";
 
 type Product = {
   id: string;
@@ -70,13 +71,15 @@ export default function HomePage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Products</h1>
 
+        <SearchComp/>
+
         <Link
           href="/products/addProduct"
           className="
             px-4 py-2 rounded-lg transition
             bg-gray-700 text-white
             hover:bg-gray-800
-            dark:bg-white dark:text-black   // ✅ FIX 1
+            dark:bg-white dark:text-black 
           "
         >
           ➕ Add New Product
@@ -86,7 +89,7 @@ export default function HomePage() {
       {loading ? (
         <p>Loading...</p>
       ) : products.length === 0 ? (
-        <p className="text-gray-500 dark:text-gray-400"> {/* ✅ FIX 2 */}
+        <p className="text-gray-500 dark:text-gray-400"> 
           No products found.
         </p>
       ) : (
@@ -96,9 +99,7 @@ export default function HomePage() {
               key={product.id}
               className="
                 border rounded-xl p-4 shadow-sm
-                bg-white dark:bg-slate-800   // ✅ FIX 3
-              "
-            >
+                bg-white dark:bg-slate-800">
               {product.image && (
                 <img
                   src={product.image}
@@ -112,7 +113,7 @@ export default function HomePage() {
               </h3>
 
               {product.description && (
-                <p className="text-sm text-gray-600 dark:text-gray-300 mt-1"> {/* ✅ FIX 4 */}
+                <p className="text-sm text-gray-600 dark:text-gray-300 mt-1"> 
                   {product.description}
                 </p>
               )}
@@ -139,9 +140,7 @@ export default function HomePage() {
                   onClick={() => handleDelete(product.id)}
                   className="
                     p-2 rounded-lg transition
-                    bg-red-500 hover:bg-red-600 text-white
-                  "
-                >
+                    bg-red-500 hover:bg-red-600 text-white">
                   <Trash2 size={18} />
                 </button>
               </div>

@@ -5,38 +5,64 @@ import {
   addProduct,
   updateProduct,
   deleteProduct,
+  searchProducts
 } from '@/lib/products'
 
 
 export async function GET(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url)
-    const id = searchParams.get('id')
 
+    const id = searchParams.get("id")
+    const search = searchParams.get("search")
     if (id) {
       const numericId = Number(id)
 
       if (isNaN(numericId)) {
-        return NextResponse.json({ success: false, products: [] }, { status: 400 })
+        return NextResponse.json(
+          { success: false, products: [] },
+          { status: 400 }
+        )
       }
 
       const product = await getProductById(numericId)
 
       if (!product) {
-        return NextResponse.json({ success: false, products: [] }, { status: 404 })
+        return NextResponse.json(
+          { success: false, products: [] },
+          { status: 404 }
+        )
       }
 
-      return NextResponse.json({ success: true, products: [product] })
+      return NextResponse.json({
+        success: true,
+        products: [product],
+      })
     }
+    if (search) {
+      const products = await searchProducts(search)
 
-    // return all products
+      return NextResponse.json({
+        success: true,
+        products,
+      })
+    }
     const products = await getAllProducts()
-    return NextResponse.json({ success: true, products })
-  } catch (error: any) {
+
+    return NextResponse.json({
+      success: true,
+      products,
+    })
+  } catch (error) {
     console.error(error)
-    return NextResponse.json({ success: false, products: [] }, { status: 500 })
+
+    return NextResponse.json(
+      { success: false, products: [] },
+      { status: 500 }
+    )
   }
 }
+
 
 export async function POST(req: Request) {
 

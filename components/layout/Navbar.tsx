@@ -31,7 +31,7 @@ function Navbar() {
             <Link href="/products" className="hover:text-indigo-500">Products</Link>
             <Link href="/contact" className="hover:text-indigo-500">Contact</Link>
 
-            <SearchComp />
+            {/* <SearchComp /> */}
           </div>
 
           <ModeToggle />
