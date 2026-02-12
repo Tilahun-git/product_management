@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { MdClose, MdOutlineProductionQuantityLimits } from "react-icons/md";
 import { ModeToggle } from "./ModeToggle";
-import SearchComp from "@/components/layout/SearchComp";
+import SearchComp from "@/components/store/SearchComp";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,7 +47,7 @@ function Navbar() {
 
       {/* Mobile Drawer */}
       {isOpen && (
-        <div className="md:hidden fixed top-0 right-0 h-full w-64 bg-white dark:bg-slate-900 shadow-lg">
+        <div className="flex flex-col md:hidden fixed top-0 right-0 h-full w-64 bg-white dark:bg-slate-900 shadow-lg">
           <div className="px-4 pt-6 space-y-3 text-slate-800 dark:text-slate-200">
             <Link href="/" onClick={() => setIsOpen(false)}>Home</Link>
             <Link href="/about" onClick={() => setIsOpen(false)}>About</Link>

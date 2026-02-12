@@ -29,7 +29,6 @@ export default function AddProductPage() {
   })
   const [error, setError] = useState<string | null>(null)
 
-  // Fetch product for editing
   useEffect(() => {
     if (!editingId) return
 

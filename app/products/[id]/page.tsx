@@ -19,7 +19,23 @@ type Product = {
 export default function ProductDetailsPage() {
   const { id } = useParams()
   const [product, setProduct] = useState<Product | null>(null)
+  const [quantity, setQuantity] = useState(1)
   const [loading, setLoading] = useState(true)
+
+
+
+
+function handleAddToCart() {
+  if (!product) return
+
+  console.log("Add to cart:", {
+    id: product.id,
+    quantity,
+  })
+
+  toast.success(`${product.name} added to cart 🛒`)
+}
+
 
   const router =useRouter()
   useEffect(() => {
@@ -101,6 +117,51 @@ export default function ProductDetailsPage() {
               </p>
             )}
           </div>
+          <div className="mt-6 space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="text-sm">Quantity:</span>
+
+                <button
+                  onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                  className="px-3 py-1 rounded bg-gray-200 dark:bg-slate-700"
+                >
+                  -
+                </button>
+
+                <span className="w-6 text-center">{quantity}</span>
+
+                <button
+                  onClick={() =>
+                    setQuantity((q) =>
+                      product.stock ? Math.min(product.stock, q + 1) : q + 1
+                    )
+                  }
+                  className="px-3 py-1 rounded bg-gray-200 dark:bg-slate-700"
+                >
+                  +
+                </button>
+              </div>
+              <button
+                onClick={handleAddToCart}
+                disabled={product.stock === 0}
+                className="
+                  w-full
+                  rounded-lg
+                  bg-cyan-950
+                  px-6
+                  py-3
+                  text-white
+                  font-semibold
+                  hover:bg-gree-700
+                  disabled:bg-gray-400
+                  disabled:cursor-not-allowed
+                "
+              >
+                {product.stock === 0 ? "Out of Stock" : "Add To Cart 🛒"}
+              </button>
+
+            </div>
+
         </div>
       </div>
     </main>

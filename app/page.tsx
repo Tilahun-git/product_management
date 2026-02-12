@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast, { Toaster } from "react-hot-toast";
 import { Edit2, Trash2 } from "lucide-react";
-import SearchComp from "@/components/layout/SearchComp";
+import SearchComp from "@/components/store/SearchComp";
+
 
 type Product = {
   id: string;
