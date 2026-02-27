@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { UploadCloud, X } from "lucide-react";
 
@@ -21,11 +22,48 @@ const initialForm: ProductForm = {
   stock: "",
 };
 
-export default function AddProductPage() {
+export default function EditProductPage() {
   const router = useRouter();
+  const params = useParams();
+  const editingId =
+  typeof params?.id === "string"
+    ? params.id
+    : Array.isArray(params?.id)
+    ? params.id[0]
+    : undefined;
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [form, setForm] = useState<ProductForm>(initialForm);
   const [error, setError] = useState<string | null>(null);
+
+  // Fetch product on mount
+  useEffect(() => {
+      const idNumber = Number(editingId);
+      if (!idNumber) return;
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`/api/products/${idNumber}`);
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          toast.error("Unable to fetch product");
+          return;
+        }
+
+        const product = data.product;
+        setForm({
+          name: product.name || "",
+          description: product.description || "",
+          image: product.image || "",
+          price: product.price?.toString() || "",
+          stock: product.stock?.toString() || "",
+        });
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to also there to fetch product");
+      }
+    };
+
+    fetchProduct();
+  }, [editingId]);
 
   function handleChange(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -52,19 +90,20 @@ export default function AddProductPage() {
     };
 
     try {
-      toast.loading("Adding product...", { id: "save" });
-      const res = await fetch("/api/products", {
-        method: "POST",
+
+      const res = await fetch(`/api/products/${editingId}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
       const data = await res.json();
-
-      if (data.success) {
+        if (data.success) {
         toast.success(data.message, { id: "save" });
-        setForm(initialForm);
-      } else {
+        setTimeout(() => {
+          router.push("/products");
+        }, 1500); // wait 1.5s so toast shows
+      }else {
         setError(data.message || "Something went wrong");
         toast.error(data.message || "Something went wrong", { id: "save" });
       }
@@ -91,7 +130,6 @@ export default function AddProductPage() {
       });
 
       const data = await res.json();
-
       if (data.success) {
         setForm((prev) => ({ ...prev, image: data.url }));
         toast.success("Image uploaded", { id: "upload" });
@@ -110,7 +148,7 @@ export default function AddProductPage() {
 
   return (
     <main className="max-w-xl mx-auto p-8 mt-8 mb-4 rounded-xl shadow bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200">
-      <h2 className="text-xl font-semibold mb-4 text-center">Add New Product</h2>
+      <h2 className="text-xl font-semibold mb-4 text-center">Update Product</h2>
 
       {error && (
         <p className="mb-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900 p-2 rounded">
@@ -195,7 +233,7 @@ export default function AddProductPage() {
             type="submit"
             className="flex-1 bg-cyan-800 dark:bg-gray-300 text-white dark:text-slate-900 py-2 rounded-lg hover:opacity-90 transition"
           >
-            Add Product
+            Update Product
           </button>
           <button
             type="button"

@@ -1,7 +1,6 @@
 "use client";
 
 import { Edit2, Trash2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 type Props = {
   id: string;
@@ -11,6 +10,7 @@ type Props = {
   stock: number;
   description?: string;
   onDelete: (id: string) => void;
+  onEdit: (id: string) => void; // Added edit handler
 };
 
 export default function AdminProductCard({
@@ -21,12 +21,10 @@ export default function AdminProductCard({
   stock,
   description,
   onDelete,
+  onEdit,
 }: Props) {
-  const router = useRouter();
-
   return (
     <div className="border rounded-xl p-4 shadow-sm bg-white dark:bg-slate-800">
-
       {image && (
         <img
           src={image}
@@ -49,13 +47,15 @@ export default function AdminProductCard({
       </div>
 
       <div className="mt-4 flex gap-2 justify-evenly">
+        {/* Edit button now calls parent onEdit handler */}
         <button
-          onClick={() => router.push(`/products/addProduct?id=${id}`)}
+          onClick={() => onEdit(id)}
           className="p-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
         >
           <Edit2 size={18} />
         </button>
 
+        {/* Delete button */}
         <button
           onClick={() => onDelete(id)}
           className="p-2 rounded-lg bg-red-500 hover:bg-red-600 text-white"

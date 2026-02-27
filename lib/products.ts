@@ -1,46 +1,39 @@
 // lib/api.ts
-import { CreateProductInput } from '@/types/product'
-import { prisma } from './prisma'
+import { CreateProductInput } from "@/types/product";
+import { prisma } from "./prisma";
 
-export type UpdateProductInput = Partial<CreateProductInput>
+export type UpdateProductInput = Partial<CreateProductInput>;
 
-// Get all products (maps backend ID → frontend id string)
 export async function getAllProducts() {
   const products = await prisma.product.findMany();
   return products.map((p) => ({
-    id: p.ID.toString(), // map to string for frontend
+    id: p.ID.toString(),
     name: p.name,
     price: p.price,
     description: p.description,
     image: p.image,
     stock: p.stock,
-  }))
+  }));
 }
 
-// Get single product by id (frontend string id → backend number ID)
 export async function getProductById(id: number) {
-
-    if (!id || isNaN(id)) return null
+  if (!id || isNaN(id)) return null;
 
   const product = await prisma.product.findUnique({
     where: { ID: id },
-  })
-  if (!product) return null
+  });
+  if (!product) return null;
 
   return {
-    id: product.ID.toString(), // map to string
+    id: product.ID.toString(),
     name: product.name,
     price: product.price,
     description: product.description,
     image: product.image,
     stock: product.stock,
-  }
+  };
 }
 
-
-
-
-// Create a new product
 export async function addProduct(data: CreateProductInput) {
   const product = await prisma.product.create({
     data: {
@@ -50,7 +43,7 @@ export async function addProduct(data: CreateProductInput) {
       price: data.price,
       stock: data.stock ?? 0,
     },
-  })
+  });
   return {
     id: product.ID.toString(),
     name: product.name,
@@ -58,15 +51,15 @@ export async function addProduct(data: CreateProductInput) {
     description: product.description,
     image: product.image,
     stock: product.stock,
-  }
+  };
 }
 
-// Update an existing product
-export async function updateProduct(id: string, data: UpdateProductInput) {
+// 🔧 CHANGED: id type string → number
+export async function updateProduct(id: number, data: UpdateProductInput) {
   const product = await prisma.product.update({
-    where: { ID: Number(id) },
+    where: { ID: id }, // 🔧 removed Number()
     data,
-  })
+  });
   return {
     id: product.ID.toString(),
     name: product.name,
@@ -74,14 +67,14 @@ export async function updateProduct(id: string, data: UpdateProductInput) {
     description: product.description,
     image: product.image,
     stock: product.stock,
-  }
+  };
 }
 
-// Delete a product
-export async function deleteProduct(id: string) {
+// 🔧 CHANGED: id type string → number
+export async function deleteProduct(id: number) {
   const product = await prisma.product.delete({
-    where: { ID: Number(id) },
-  })
+    where: { ID: id }, // 🔧 removed Number()
+  });
   return {
     id: product.ID.toString(),
     name: product.name,
@@ -89,30 +82,19 @@ export async function deleteProduct(id: string) {
     description: product.description,
     image: product.image,
     stock: product.stock,
-  }
+  };
 }
 
-// Search products
 export async function searchProducts(query: string) {
   const products = await prisma.product.findMany({
     where: {
       OR: [
-        {
-          name: {
-            contains: query,
-            mode: 'insensitive',
-          },
-        },
-        {
-          description: {
-            contains: query,
-            mode: 'insensitive',
-          },
-        },
+        { name: { contains: query, mode: "insensitive" } },
+        { description: { contains: query, mode: "insensitive" } },
       ],
     },
-   orderBy: { name: "asc" },
-  })
+    orderBy: { name: "asc" },
+  });
 
   return products.map((p) => ({
     id: p.ID.toString(),
@@ -121,6 +103,5 @@ export async function searchProducts(query: string) {
     description: p.description,
     image: p.image,
     stock: p.stock,
-  }))
+  }));
 }
-
