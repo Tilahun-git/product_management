@@ -23,7 +23,7 @@ export default function RegisterPage() {
       if (!res.ok) throw new Error(data.message || "Registration failed");
 
       toast.success(data.message);
-      router.push("/auth/login"); 
+      router.replace("/auth/login"); 
     } catch (err: any) {
       toast.error(err.message);
     }
